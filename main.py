@@ -162,19 +162,22 @@ class MainWindow(QMainWindow):
         else:
             hash_list = sc.connect_and_execute("EXEC GetHash @EMAIL=?", e)
 
+            if not hash_list or not hash_list[0] or not hash_list[0][0]:
+                self.load_login_error()
+                return
+
             if hash_list :
                 hash_ = hash_list[0][0]
-            else:
-                hash_ = ""
 
             try:
                 ph.verify(hash_,p)
+                self.load_user_page(n, e)
             except argon2.exceptions.VerifyMismatchError:
                 self.load_login_error()
             except argon2.exceptions.VerificationError:
-                print("Invalid hash format.")
-            finally:
-                self.load_user_page(n, e)
+                self.load_login_error()
+            except Exception:
+                self.load_login_error()
 
     def state(self):
         win = AdminWindow(self.setting,parent=self)

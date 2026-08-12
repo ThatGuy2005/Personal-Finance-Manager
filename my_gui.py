@@ -283,4 +283,4 @@ class WidgetWithCheck(QWidget):
             return inner
 
     def get_delete_params(self):
-        return self.widget.get_delete_params()
+        return self.widget.get_delete_params() 
