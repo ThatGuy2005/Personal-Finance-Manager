@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables & secrets
+.env
+*.env
+config.ini
+secrets.json
+
+# Local SQL Server / database files
+*.mdf
+*.ldf
+*.db
+*.sqlite3
+
+# IDE / Editor specific settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# PyQt generated cache/files
+*.qrc.py

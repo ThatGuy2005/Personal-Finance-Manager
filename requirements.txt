@@ -1,0 +1,6 @@
+Python3.10+
+SQL Server with ODBC Driver 18 installed
+PyQt6
+pyodbc
+argon2-cffi
+python-dotenv
