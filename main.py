@@ -300,7 +300,7 @@ class MainWindow(QMainWindow):
             add_btn.clicked.connect(lambda: self.open_add_saving_view())
 
             update_btn = QPushButton("Update Balance")
-            update_btn.clicked.connect(self.open_update_saving_balance_view)
+            update_btn.clicked.connect(lambda: self.open_update_saving_balance_view())
 
             del_btn = QPushButton("Delete Saving")
 
@@ -324,29 +324,33 @@ class MainWindow(QMainWindow):
     def submit_update_saving_balance(self, fields):
         data = self.gather_form_values(fields)
         selected = self.selected_saving
+        if not selected:
+            return
 
-        result = sc.connect_and_execute(
-            "EXEC GetAccountID @EMAIL=?, @CURRENCY=?",
-            self.email,
-            str(selected[2])
-        )
-        if not result or result[0][0] is None:
+        account_id = self._resolve_account_id(selected)
+        if account_id is None:
+            print("Could not resolve Account ID for the selected saving.")
             return  
 
-        account_id = result[0][0]
+        try:
+            new_balance = float(data["BALANCE"])
+            yield_val = float(selected[0])
+            old_budget = float(selected[1])
+        except (ValueError, TypeError, IndexError) as e:
+            print(f"Error parsing savings values: {e}")
+            return
+
         sc.connect_and_delete(
             "UPDATE SavingPlans SET BUDGET=? WHERE ACCOUNT_ID=? AND YIELD=? AND BUDGET=?",
-            data["BALANCE"],
+            new_balance,
             account_id,
-            selected[0],
-            selected[1]
+            old_budget,
+            yield_val
         )
 
         self.update_popup.close()
-        self.win_manager.built_windows["savings_window"] = False
+        
         self.load_savings()
-
-    
 
     def _resolve_account_id(self, item):
         """Fetches Account ID if currency string is present in parameters."""
